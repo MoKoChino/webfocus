@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<rootObject _jt="IBFSMRObject" binary="false" defaultLng="en_US" dummy="false" expireDate="0" length="0" type="FexFile">
+    <properties size="2">
+        <entry key="LastDescribed" value="1622009694067"/>
+        <entry key="tool" value="editor"/>
+    </properties>
+    <extendedProperties _jt="HashMap" loadFactor="0.75" threshold="0"/>
+    <nlsValues _jt="HashMap" loadFactor="0.75" threshold="12">
+        <entry>
+            <key _jt="string" value="en_US"/>
+            <value _jt="ArrayList" size="2">
+                <item _jt="string" index="0" value="chart"/>
+            </value>
+        </entry>
+    </nlsValues>
+    <fexParameters _jt="ArrayList" size="1">
+        <item _jt="IBRFexParameter" datadomain="CAR" index="0" multiselect="true" parmname="CAR" required="false">
+            <amperVar aggType="" amperIdx="8" chainIdx="-1" class="com.ibi.wfrs.IBFSWFDescribe$AmperVar" description="CAR" format="A16" idxInChain="-1" inForm="true" isDefault="true" max="0.0" min="0.0" name="CAR" noSelection="true" operation="OR" parent="" proc="" sortFields="" sortOrder="ASCENDING" strDef="_FOC_NULL" validate="">
+                <type class="com.ibi.wfrs.IBFSAmperVarType" name="defaultType"/>
+                <userDefValues _jt="array" itemsClass="string" size="1">
+                    <item _jt="string" index="0" value="_FOC_NULL"/>
+                </userDefValues>
+                <defValues _jt="array" itemsClass="string" size="1">
+                    <item _jt="string" index="0" value="_FOC_NULL"/>
+                </defValues>
+                <displayType class="com.ibi.wfrs.IBFSAmperDisplayType" name="find"/>
+                <values accessOrder="false" class="java.util.LinkedHashMap" loadFactor="0.75" threshold="0"/>
+                <dynValues class="com.ibi.wfrs.IBFSWFDescribe$DynamicAmper" displayField="" field="CAR.COMP.CAR" file="IBISAMP/CAR">
+                    <type class="com.ibi.wfrs.IBFSAmperDisplayType" name="find"/>
+                </dynValues>
+                <parameters _jt="HashMap" loadFactor="0.75" threshold="0"/>
+            </amperVar>
+        </item>
+    </fexParameters>
+</rootObject>
