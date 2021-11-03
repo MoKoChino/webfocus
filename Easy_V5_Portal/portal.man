@@ -1,0 +1,1 @@
+{"navigation":"3-level","logo":"","maxWidth":"100pc","banner":true,"showPortalTitleInBanner":true,"showTopNavigationInBanner":false,"createMyPageMenu":false,"theme":"IBFS:/WFC/Global/Themes/Standard/Midnight/theme.css","alias":"EasyPortal"}
