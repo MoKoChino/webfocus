@@ -1,0 +1,93 @@
+-DEFAULT &1= ' ';   
+-******************************************************************************
+-*****   SI TIENES EL AUTOPROMPT ESTA LINEA NO ES NECESARIA *******************
+-******************************************************************************
+-SET &1='D:\ibi\WebFOCUS76\basedir';
+-******************************************************************************
+-IF &1 NE ' ' THEN GOTO SIGO;                                                   
+-TYPE Falta el basedir                                                          
+-TYPE EX LEOBASEDIR2 'directorio basedir'                                           
+-TYPE EX LEOBASEDIR2 'D:\ibi\WebFOCUS76\basedir'                                    
+-EXIT                                                                           
+-SIGO                                                                           
+-SET &BASEDIR= &1 || '\user.htm' ;                                              
+FILEDEF LEOBASEDIR DISK &BASEDIR (LRECL 200                                         
+FILEDEF HOLD DISK ..\..\catalog\ibiaudit.fex (LRECL 200                         
+                                                                                
+-SET &DIA=EDIT(&DMY,'99/99/99') | ' - ' |  HHMMSS('A8');                        
+SET PAGE=NOPAGE                                                                 
+-***************************************************                            
+FILEDEF MAS DISK LEOBASEDIR.mas                                                     
+-RUN                                                                            
+-WRITE MAS FILE=LEOBASEDIR  , SUFFIX=FIX  ,$                                        
+-WRITE MAS SEGNAME=UNO,$                                                        
+-WRITE MAS FIELD=TEXTO     ,,A200 ,A200  ,$                                     
+-***************************************************                            
+-*                                                                              
+DEFINE FILE LEOBASEDIR                                                              
+COMA/A1='''';                                                                   
+CUANTOS/I5=IF TEXTO CONTAINS 'USERFILES' THEN 1 ELSE 0;                         
+USUARIO/I5=IF TEXTO CONTAINS 'USERFILES' THEN USUARIO + 1                       
+           ELSE USUARIO;                                                        
+LINEAOK/I5=IF TEXTO CONTAINS 'MRFLAG' THEN 1 ELSE 0;                            
+LONGI/I3=ARGLEN(200,TEXTO,LONGI);                                               
+NOMBRE/A200=IF USUARIO GE 1 AND LINEAOK EQ 1 THEN                               
+  GETTOK(TEXTO,LONGI,-1,'>',LONGI,NOMBRE) ELSE 'NA DE NA' ;                     
+TIPO/A200=IF USUARIO GE 1 AND LINEAOK EQ 1 THEN                                 
+  GETTOK(TEXTO,LONGI,6,COMA,LONGI,TIPO) ELSE 'NA DE NA' ;                       
+NOMBRE2/A200=IF USUARIO GE 1 AND LINEAOK EQ 1 THEN                              
+  GETTOK(TEXTO,LONGI,4,COMA,LONGI,NOMBRE2) ELSE 'NA DE NA' ;                    
+END                                                                             
+-*                                                                              
+TABLE FILE LEOBASEDIR                                                               
+HEADING                                                                         
+" Usuarios MRE "                                                                
+" "                                                                             
+" Fecha: &DIA "                                                                 
+" Total: <CNT.CUANTOS"                                                          
+" "                                                                             
+SUM  CNT.CUANTOS NOPRINT                                                        
+LIST NOMBRE AS 'Nombre'                                                         
+     NOMBRE2 AS 'Nombre MRE'                                                    
+     TIPO AS 'Atributos'                                                                                                                                        
+IF USUARIO GE 1                                                                 
+IF LINEAOK EQ 1                                                                 
+ON TABLE HOLD FORMAT HTML                                                       
+END                                                                             
+-RUN                                                                            
+-IF &LINES EQ 0 THEN GOTO ERROR;                                                
+RETYPE                                                                          
+-*                                                                              
+-EDAPRI                                                                         
+FILEDEF LEOBASEDIR DISK ..\..\edaprint.log (LRECL 200                               
+FILEDEF HOLD DISK ..\..\catalog\ibiaudit.fex (LRECL 200 APPEND                  
+-*                                                                              
+DEFINE FILE LEOBASEDIR                                                              
+LONGI/I3=ARGLEN(200,TEXTO,LONGI);                                               
+TEXTO2/A80=SUBSTR(200,TEXTO,21,80,80,TEXTO2);                                   
+LIN1/I5=IF TEXTO CONTAINS 'Local system information' THEN LIN1 + 1              
+        ELSE IF LAST LIN1 GE 1 THEN LIN1 + 1 ELSE 0;                            
+LIN2/I5=IF TEXTO CONTAINS 'Main Configuration' THEN LIN2 + 1                    
+        ELSE IF LAST LIN2 GE 1 THEN LIN2 + 1 ELSE 0;                            
+                                                                                
+END                                                                             
+TABLE FILE LEOBASEDIR                                                               
+HEADING                                                                         
+" "                                                                             
+" Informacion del WebFocus server"                                              
+" "                                                                             
+PRINT TEXTO2 AS ''                                                              
+WHERE (LIN1 GE 1 AND LIN1 LE 8)                                                 
+   OR (LIN2 GE 1 AND LIN2 LE 9) ;                                               
+IF READLIMIT EQ 150                                                             
+ON TABLE HOLD FORMAT HTML                                                       
+END                                                                             
+RETYPE                                                                          
+-RUN                                                                            
+SET PASS=IBE                                                                    
+ENCRYPT FILE IBIAUDIT FOCEXEC                                                   
+-*                                                                              
+-EXIT                                                                           
+-ERROR                                                                          
+-TYPE ERROR                                                                     
+-TYPE ¿es correcto el basedir?: &1                                              
